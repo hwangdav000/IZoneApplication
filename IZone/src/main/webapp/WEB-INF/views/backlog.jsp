@@ -99,7 +99,7 @@
                             <td>${issue.priority}</td>
                             <td>${issue.issueStatus}</td>
                             <td>
-                                <a href="${pageContext.request.contextPath}/issue/${issue.issueId}" class="btn btn-primary">View Issue</a>
+                                <button class="btn btn-primary btn-sm view-issue-btn" value="${issue.issueId}">View Issue</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -109,21 +109,136 @@
     </div>
 </div>
 
+<div class="modal fade" id="issueModal" tabindex="-1" role="dialog" aria-labelledby="issueModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="issueModalLabel">Issue Details</h5>
+      </div>
+      <div class="modal-body">
+        <!-- Issue Details -->
+        <div class="container">
+          <form id="issueForm">
+            <div class="row">
+              <div class="col-md-4">
+                <h6><strong>Issue Name:</strong></h6>
+                <input type="text" class="form-control" id="issueName" disabled>
+              </div>
+              <div class="col-md-4">
+                <h6><strong>Issue ID:</strong></h6>
+                <input type="text" class="form-control" id="issueId" disabled>
+              </div>
+              <div class="col-md-4">
+                <h6><strong>Created Date:</strong></h6>
+                <input type="text" class="form-control" id="createdDateTime" disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <h6><strong>Issue Type:</strong></h6>
+                <select class="form-control" id="issueType" disabled>
+			      <option value="TASK">Task</option>
+			      <option value="EPIC">Epic</option>
+			      <option value="STORY">Story</option>
+			      <option value="BUG">Bug</option>
+			    </select>
+              </div>
+              <div class="col-md-4">
+                <h6><strong>Assignee:</strong></h6>
+                <input type="text" class="form-control" id="assignee" disabled>
+              </div>
+              <div class="col-md-4">
+                <h6><strong>Reporter:</strong></h6>
+                <input type="text" class="form-control" id="reporter" disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h6><strong>Status:</strong></h6>
+                <select class="form-control" id="issueStatus" disabled>
+			      <option value="TODO">TODO</option>
+			      <option value="INPROGRESS">In Progress</option>
+			      <option value="DONE">Done</option>
+			      <option value="COMPLETE">Complete</option>
+			    </select>
+
+              </div>
+              <div class="col-md-6">
+                <h6><strong>Priority:</strong></h6>
+                <select class="form-control" id="priority" disabled>
+			      <option value="HIGHEST">Highest</option>
+			      <option value="HIGH">High</option>
+			      <option value="MEDIUM">Medium</option>
+			      <option value="LOW">Low</option>
+			      <option value="LOWEST">Lowest</option>
+			    </select>
+                
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h6><strong>Summary:</strong></h6>
+                <textarea class="form-control" id="issueSummary" rows="3" disabled></textarea>
+              </div>
+            </div>
+            <!-- Attachments and Comments sections remain unchanged -->
+			
+            <div class="row">
+              <div class="col-md-12">
+                <h6><strong>Attachments:</strong></h6>
+                <div id="attachmentsContainer" class="d-flex flex-wrap">
+                  <!-- Attachments will be dynamically inserted here -->
+                </div>
+              </div>
+            </div>
+            <!-- Comments Display -->
+            <div class="row">
+              <div class="col-md-12">
+                <h6><strong>Comments:</strong></h6>
+                <ul id="commentsList">
+                  <!-- Comments will be dynamically inserted here -->
+                </ul>
+              </div>
+            </div>
+            <!-- Add Comment Section -->
+            <div class="container mt-3">
+              <h6><strong>Add Comment:</strong></h6>
+              <div id="commentContainer">
+			  <div class="form-group">
+			    <textarea rows="4" cols="50" class="form-control" id="commentText" placeholder="Add a comment"></textarea>
+			  </div>
+			  <button type="button" id="submitComment" class="btn btn-primary">Add Comment</button>
+			  </div>
+            </div>
+            <!-- Add Attachment Section -->
+            <div class="container mt-3">
+              <h6><strong>Add Attachment:</strong></h6>
+              <div id="attachmentDiv" enctype="multipart/form-data">
+			    <div class="form-group">
+			        <input type="file" class="form-control-file" id="attachmentFile">
+			    </div>
+			    <button type="button" id="submitAttachment" class="btn btn-primary">Add Attachment</button>
+			  </div>
+            </div>
+			
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" id="cancelButton" style="display:none;">Cancel</button>
+        <button type="button" class="btn btn-primary" id="editButton">Edit</button>
+        <button type="button" class="btn btn-success" id="saveButton" style="display:none;">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    $(document).ready(function(){
-        // Search functionality
-        $("#issueSearch").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#issuesTable tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    });
-</script>
+<script src="./js/viewIssue.js"></script>
 
 </body>
 </html>

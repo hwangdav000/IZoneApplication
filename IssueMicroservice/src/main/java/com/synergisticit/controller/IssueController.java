@@ -25,6 +25,22 @@ public class IssueController {
 		return iService.save(node);
 	}
 	
+	@RequestMapping(value="/updateIssue/{issueId}", method=RequestMethod.POST)
+	public Issue updateIssue(@RequestBody JsonNode node, @PathVariable Long issueId) {
+		return iService.update(node, issueId);
+	}
+	
+	@RequestMapping(value="/saveIssueAttachment", method=RequestMethod.POST)
+	public Issue saveIssueAttachment(@RequestBody JsonNode node) {
+		return iService.saveAttachment(node);
+	}
+	
+	@RequestMapping(value="/saveComment", method=RequestMethod.POST)
+	public Issue saveComment(@RequestBody JsonNode node) {
+		return iService.saveComment(node);
+	}
+	
+	
 	@RequestMapping(value="/getIssue/{issueId}", method=RequestMethod.GET)
 	public JsonNode getIssueById(@PathVariable Long issueId) {
 		Issue issue = iService.findById(issueId);
@@ -52,8 +68,6 @@ public class IssueController {
 	    
 	    
 		return issueListNode;
-		
-		
 	}
 	
 

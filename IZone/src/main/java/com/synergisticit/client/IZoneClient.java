@@ -62,6 +62,51 @@ public class IZoneClient {
 		return returnObj;
 	}
 	
+	public JsonNode saveIssueAttachment(JsonNode node) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);	
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Object> responseEntity = restTemplate.postForEntity(issueMicroURL + "saveIssueAttachment", request, Object.class);
+		Object objects = responseEntity.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode returnObj = mapper.convertValue(objects, JsonNode.class);
+		return returnObj;
+	}
+	
+	public JsonNode updateIssue(JsonNode node, Long issueId) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);	
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Object> responseEntity = restTemplate.postForEntity(issueMicroURL + "updateIssue/" + issueId, request, Object.class);
+		Object objects = responseEntity.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode returnObj = mapper.convertValue(objects, JsonNode.class);
+		return returnObj;
+	}
+	
+	public JsonNode saveComment(JsonNode node) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);	
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Object> responseEntity = restTemplate.postForEntity(issueMicroURL + "saveComment", request, Object.class);
+		Object objects = responseEntity.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode returnObj = mapper.convertValue(objects, JsonNode.class);
+		return returnObj;
+	}
+	
 	public JsonNode getIssuesByProjectId(Long projectId) {
 	    RestTemplate restTemplate = new RestTemplate();
 	    ResponseEntity<String> responseEntity = restTemplate.getForEntity(issueMicroURL + "getIssues/" + projectId, String.class);

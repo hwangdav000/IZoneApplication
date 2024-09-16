@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,8 +49,8 @@ public class Issue {
 	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime createdDateTime;
 	
-	@ManyToMany
+	@OneToMany(mappedBy = "commentIssue")
 	private List<Comment> comments = new ArrayList<>();
-	@ManyToMany
+	@OneToMany(mappedBy = "documentIssue")
 	private List<Document> documents = new ArrayList<>();
 }

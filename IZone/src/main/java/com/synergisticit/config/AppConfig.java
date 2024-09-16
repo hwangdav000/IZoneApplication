@@ -31,7 +31,7 @@ public class AppConfig {
 	@Bean
 	public DriverManagerDataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setUrl("jdbc:mysql://localhost:3306/jiraDB?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/izoneDB?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true");
 		dataSource.setUsername("root");
 		dataSource.setPassword("password");
 		return dataSource;

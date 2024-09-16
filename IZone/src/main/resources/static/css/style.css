@@ -71,3 +71,23 @@ table a.btn-primary {
     border-color: #0052cc;
     color: white;
 }
+
+input:disabled,
+input[disabled],
+.form-control:disabled
+{
+ 	background-color: rgb(255, 255, 255) !important;  /* White background */
+ 	border-color: rgb(255, 255, 255) !important;
+    color: #000; /* Black text color */
+    opacity: 1; /* Override the default opacity */
+    cursor: default; /* Default cursor */
+}
+
+select:disabled {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+textarea {
+    resize:none;
+}

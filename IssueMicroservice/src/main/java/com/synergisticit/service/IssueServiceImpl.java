@@ -3,17 +3,20 @@ package com.synergisticit.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.synergisticit.domain.Comment;
 import com.synergisticit.domain.Document;
 import com.synergisticit.domain.Issue;
 import com.synergisticit.domain.IssueStatus;
 import com.synergisticit.domain.IssueType;
 import com.synergisticit.domain.Priority;
+import com.synergisticit.repository.CommentRepository;
 import com.synergisticit.repository.DocumentRepository;
 import com.synergisticit.repository.IssueRepository;
 
@@ -26,6 +29,7 @@ public class IssueServiceImpl implements IssueService {
 
 	@Autowired IssueRepository iRepo;
 	@Autowired DocumentRepository dRepo;
+	@Autowired CommentRepository cRepo;
 	
 	@Override
 	public Issue save(JsonNode node) {
@@ -57,17 +61,55 @@ public class IssueServiceImpl implements IssueService {
 		
 	}
 	
+	@Override
+	public Issue update(JsonNode node, Long issueId) {
+		
+		Issue issue = findById(issueId);
+		
+		IssueType issueType = IssueType.valueOf(node.get("issueType").asText());
+		String assignee= node.get("assignee").asText();
+		Priority priority= Priority.valueOf(node.get("priority").asText());
+		IssueStatus issueStatus= IssueStatus.valueOf(node.get("issueStatus").asText());
+		String issueName= node.get("issueName").asText();
+		String issueSummary= node.get("issueSummary").asText();
+		
+		issue.setIssueType(issueType);
+		issue.setAssignee(assignee);
+		issue.setPriority(priority);
+		issue.setIssueStatus(issueStatus);
+		issue.setIssueName(issueName);
+		issue.setIssueSummary(issueSummary);
+		
+		return iRepo.save(issue);
+	}
 	
+	@Override
+	public Issue saveAttachment(JsonNode node) {
+		System.out.println("save attachment in issue");
+		Long issueId = node.get("issueId").asLong();
+		JsonNode documentNameNode = node.get("documentName");
+		JsonNode documentPathNode = node.get("documentPath");
+		List<Document> documents = new ArrayList<>();
+		
+		Issue issue = findById(issueId);
+		
+		for (int i = 0; i < documentNameNode.size(); i++) {
+			String docName = documentNameNode.get(i).asText();
+			String docPath = documentPathNode.get(i).asText();
+			System.out.println("doc path" + docPath);
+			
+			Document document = new Document(null, docName, docPath);
+			document.setDocumentIssue(issue);
+			
+			documents.add(dRepo.save(document));
+		}
+		
+		
+		issue.getDocuments().addAll(documents);
+		
+		return iRepo.save(issue);
+	}
 	
-//	List<Comment> comments = new ArrayList<>();
-//	
-//	JsonNode commentNode = node.get("comments");
-//	for (int i = 0; i < commentNode.size(); i++) {
-//		String submitter = commentNode.get(i).get("submitter").asText();
-//		String content = commentNode.get(i).get("content").asText();
-//		
-//		comments.add(new Comment(submitter, content));
-//	}
 	@Override
 	public List<Issue> findAll() {
 		
@@ -95,5 +137,33 @@ public class IssueServiceImpl implements IssueService {
 	public List<Issue> findByProjectId(Long projectId) {
 		return iRepo.findByProjectId(projectId);
 	}
+
+
+
+	@Override
+	public Issue saveComment(JsonNode node) {
+		Long issueId = node.get("issueId").asLong();
+        String submitter = node.get("submitter").asText();
+        String content = node.get("content").asText();
+        LocalDateTime createdDateTime = LocalDateTime.now();
+
+        Optional<Issue> issueOptional = iRepo.findById(issueId);
+        if (issueOptional.isPresent()) {
+            Issue issue = issueOptional.get();
+
+            Comment comment = new Comment();
+            comment.setSubmitter(submitter);
+            comment.setContent(content);
+            comment.setCreatedDateTime(createdDateTime);
+            comment.setCommentIssue(issue);
+            cRepo.save(comment);
+
+            return issue;
+        } else {
+            throw new IllegalArgumentException("Issue not found with id: " + issueId);
+        }
+    }
+
+	
 
 }
