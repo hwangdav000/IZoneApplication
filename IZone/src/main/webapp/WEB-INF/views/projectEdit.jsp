@@ -1,6 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,54 +66,79 @@
                     <a class="nav-link active" href="${pageContext.request.contextPath}/projectEdit">Project Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="${pageContext.request.contextPath}/userSettingPage">User Settings</a>
+                    <a class="nav-link active" href="${pageContext.request.contextPath}/userEdit">User Settings</a>
                 </li>
             </ul>
         </nav>
 
         <!-- Main Content -->
         <main role="main" class="col-md-10 ml-sm-auto px-4">
-            <div class="pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Design Board</h1>
-            </div>
-
-            <div class="row">
-                <!-- TO DO -->
-                <div class="col-md-4">
-                    <div class="card h-100 mb-4 shadow-sm d-flex flex-column">
-                        <div class="card-body flex-grow-1 d-flex flex-column">
-                            <h5 class="card-title">To Do</h5>
-                            
-                            <p class="card-text flex-grow-1">Overview of all your projects.</p>
-                            
-                            <a href="${pageContext.request.contextPath}/projects" class="btn btn-primary mt-auto">View Projects</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IN PROGRESS -->
-                <div class="col-md-4">
-                    <div class="card h-100 mb-4 shadow-sm d-flex flex-column">
-                        <div class="card-body flex-grow-1 d-flex flex-column">
-                            <h5 class="card-title">In Progress</h5>
-                            <p class="card-text flex-grow-1">See what's been happening lately.</p>
-                            <a href="${pageContext.request.contextPath}/activities" class="btn btn-primary mt-auto">View Activities</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DONE -->
-                <div class="col-md-4">
-                    <div class="card h-100 mb-4 shadow-sm d-flex flex-column">
-                        <div class="card-body flex-grow-1 d-flex flex-column">
-                            <h5 class="card-title">Done</h5>
-                            <p class="card-text flex-grow-1">Tasks assigned to you.</p>
-                            <a href="${pageContext.request.contextPath}/tasks" class="btn btn-primary mt-auto">View Tasks</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <div class="container mt-5">
+			    <div class="row justify-content-center"> 
+			        <div class="col-md-8">
+			            <div class="card">
+			                <div class="card-header text-center">
+			                    <h3>Edit Project</h3>
+			                </div>
+			                <div class="card-body">
+			                    <f:form action="${pageContext.request.contextPath}/saveProjectEdit" modelAttribute="project" method="post">
+			                        
+			                        <div class="form-group">
+			                            <label for="projectName">Project Name </label>
+			                            <f:input id="projectName" path="projectName" class="form-control" value="${p.projectName}"/>
+			                            <f:errors path="projectName" cssClass="text-danger"/>
+			                        </div>
+			                        <div class="form-group">
+			                            <label for="projectKey">Project Key</label>
+			                            <f:input id="projectKey" path="projectKey" class="form-control" value="${p.projectKey}"/>
+			                            <f:errors path="projectKey" cssClass="text-danger"/>
+			                        </div>
+			
+			                        <!-- Email Invitations Section -->
+			                        <div class="form-group">
+			                            <label for="userEmails">User Emails</label>
+			                            <div id="emailContainer">
+			                                <div class="input-group mb-3">
+			                                    <input name="userEmails" class="form-control" placeholder="Enter user email" required>
+			                                    <div class="input-group-append">
+			                                        <button class="btn btn-success add-email" type="button">Add</button>
+			                                    </div>
+			                                </div>
+			                            </div>
+			                        </div>
+			
+			                        <div class="text-center">
+			                            <a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/actionPage" role="button">Back</a>
+			                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+			                        </div>
+			                    </f:form>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			    
+		        <div class="container mt-5">
+		      
+		            <table class="table table-striped table-bordered">
+		                <thead>
+		                    <tr>
+		                        <th>Email List</th>
+		                        <th>Action</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <c:forEach items="${p.userEmails}" var="email">
+		                        <tr>
+		                            <td>${email}</td>
+		                            <td><a href="${pageContext.request.contextPath}/deleteEmail?projectId=${p.projectId}&userEmail=${email}" class="btn btn-danger btn-sm">Delete</a></td>
+		                        </tr>
+		                    </c:forEach>
+		                </tbody>
+		            </table>
+		        </div>
+			   
+    
+			</div>
         </main>
     </div>
 </div>
@@ -119,5 +146,27 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        // Add new email input field
+        // TODO change it so that REMOVE references proper email
+        $('.add-email').click(function(){
+            var emailInputHtml = `
+                <div class="input-group mb-3">
+                    <input type="email" name="userEmails" class="form-control" placeholder="Enter user email" required>
+                    <div class="input-group-append">
+                        <button class="btn btn-danger remove-email" type="button">Remove</button>
+                    </div>
+                </div>`;
+            $('#emailContainer').append(emailInputHtml);
+        });
+
+        // Remove email input field
+        $(document).on('click', '.remove-email', function(){
+            $(this).closest('.input-group').remove();
+        });
+    });
+</script>
 </body>
 </html>

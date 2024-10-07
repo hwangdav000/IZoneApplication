@@ -9,4 +9,5 @@ import com.synergisticit.domain.Project;
 public interface ProjectRepository extends JpaRepository<Project, Long>{
 	
 	Project findByProjectNameAndProjectKey(String projectName, String projectKey);
+	Project findByProjectName(String projectName);
 }

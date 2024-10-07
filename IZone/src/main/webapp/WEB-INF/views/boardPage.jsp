@@ -69,7 +69,7 @@
                     <a class="nav-link active" href="${pageContext.request.contextPath}/projectEdit">Project Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="${pageContext.request.contextPath}/userSettingPage">User Settings</a>
+                    <a class="nav-link active" href="${pageContext.request.contextPath}/userEdit">User Settings</a>
                 </li>
             </ul>
         </nav>

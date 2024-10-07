@@ -32,6 +32,36 @@ public class IZoneClient {
 		return returnObj;
 	}
 	
+	public JsonNode updateProject(JsonNode node) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);	
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Object> responseEntity = restTemplate.postForEntity(managementMicroURL + "updateProject", request, Object.class);
+		Object objects = responseEntity.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode returnObj = mapper.convertValue(objects, JsonNode.class);
+		return returnObj;
+	}
+	
+	public JsonNode deleteEmail(JsonNode node) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);	
+		
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Object> responseEntity = restTemplate.postForEntity(managementMicroURL + "deleteEmail", request, Object.class);
+		Object objects = responseEntity.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		JsonNode returnObj = mapper.convertValue(objects, JsonNode.class);
+		return returnObj;
+	}
+	
 	public JsonNode getPlan(JsonNode node) {
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);

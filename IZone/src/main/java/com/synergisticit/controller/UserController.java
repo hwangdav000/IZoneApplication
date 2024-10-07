@@ -38,14 +38,18 @@ public class UserController {
 		return "userForm";
 	}
 	
-	@RequestMapping("userSettingPage")
-	public String userSettingForm(User user, ModelMap mm, Principal p) {
+	@RequestMapping("userEdit")
+	public String userEditForm(User user, ModelMap mm, Principal p) {
 		if (p == null) {
 			return "redirect:login";
 		}
+		
 		getModel(mm, p);
 		
-		return "userSettingPage";
+		User u = userService.findUserByUsername(p.getName());
+		mm.addAttribute("u", u);
+		
+		return "userEdit";
 	}
 	
 	
@@ -63,14 +67,9 @@ public class UserController {
 		return "redirect:login";
 	}
 	
-	@RequestMapping("saveUserSettingPage")
-	public String saveUserSettingPage(@Valid User user, BindingResult br, ModelMap mm, Principal p) {
+	@RequestMapping("saveUserEdit")
+	public String saveUserEdit(@Valid User user, BindingResult br, ModelMap mm, Principal p) {
 		uValidator.validate(user,  br);
-		
-		if (user != null && user.getUserId() == 0L) {
-			mm.addAttribute("error", "unable to save changes");
-			return "userSettingPage";
-		}	
 		
 		if (user != null && user.getUserRoles().size() == 0) {
 			Role r = roleService.findByRoleName("USER");
@@ -85,7 +84,6 @@ public class UserController {
 				List<User> uList = new ArrayList<>();
 				User u = userService.findUserByUsername(user.getUsername());
 				uList.add(u);
-				
 				getModel(mm, p);
 				
 				
@@ -93,20 +91,20 @@ public class UserController {
 				getModel(mm, p);
 			}
 			
-			return "userSettingPage";
+			return "userEdit";
 		}
 		
 		userService.save(user);
 		
 		if ((p != null) && (userService.userIsRole(p.getName(), "ADMIN"))) {
-			return "redirect:userSettingPage";
+			return "redirect:userEdit";
 		} else {
 			return "redirect:login";
 		}
 	}
 	
-	@RequestMapping("updateUserSettingPage")
-	public String updateUserSettingPage(User user, ModelMap mm, Principal p) {
+	@RequestMapping("updateUserEdit")
+	public String updateUserEdit(User user, ModelMap mm, Principal p) {
 
 		
 		getModel(mm, p);
@@ -115,7 +113,7 @@ public class UserController {
 		mm.addAttribute("u", retrievedUser);
 		mm.addAttribute("retrievedRoles",retrievedUser.getUserRoles());
 		
-		return "userSettingPage";
+		return "userEdit";
 	}
 	
 	
@@ -131,13 +129,24 @@ public class UserController {
 		return "userForm";
 	}
 	
-	@RequestMapping("deleteUserSettingPage")
-	public String deleteUserSettingPage(User user, ModelMap mm, Principal p) {
+	@RequestMapping("deleteUserEdit")
+	public String deleteUserEdit(User user, ModelMap mm, Principal p) {
+		User u = userService.findUserByUsername(p.getName());
 		
 		userService.deleteById(user.getUserId());
 		getModel(mm, p);
 	
-		return "userSettingPage"; 
+		if ((p != null) && (userService.userIsRole(p.getName(), "ADMIN"))) {
+			// if delete own account redirect to login
+			if (u.getUsername().equals(p.getName())) {
+				return "redirect:login";
+			} else {
+				return "redirect:userEdit";
+			}
+			
+		} else {
+			return "redirect:login";
+		}
 	}
 
 	@RequestMapping("deleteUser")
@@ -155,11 +164,11 @@ public class UserController {
 			List<User> uList = new ArrayList<>();
 			User u = userService.findUserByUsername(p.getName());
 			uList.add(u);
-			
 			mm.addAttribute("roles", roleService.findAll());
 			mm.addAttribute("users", uList);
 			
 		}  else {
+			
 			mm.addAttribute("roles", roleService.findAll());
 			mm.addAttribute("users", userService.findAll());
 		}

@@ -25,8 +25,13 @@ public class ProjectController {
 		return pService.getProject(node);
 	}
 	
-//	@RequestMapping(value="/updateProject", method=RequestMethod.PUT)
-//	public ProjectupdateProjectItems(@RequestBody JsonNode node) {
-//		return pService.updateProjectItems(node);
-//	}
+	@RequestMapping(value="/updateProject", method=RequestMethod.PUT)
+	public Project updateProject(@RequestBody JsonNode node) {
+		return pService.updateProject(node);
+	}
+	
+	@RequestMapping(value="/deleteEmail", method=RequestMethod.PUT)
+	public Project deleteEmail(@RequestBody JsonNode node) {
+		return pService.deleteEmail(node);
+	}
 }

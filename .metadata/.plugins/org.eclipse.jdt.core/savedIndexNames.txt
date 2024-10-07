@@ -109,7 +109,6 @@ INDEX VERSION 1.134+C:\SynergisticIT\IZoneApplication\.metadata\.plugins\org.ecl
 718125159.index
 2442406108.index
 1755565995.index
-3203457842.index
 2162505516.index
 3031955041.index
 3209392034.index

@@ -36,7 +36,10 @@ public class BoardController {
             HttpSession session,
             ModelMap model, 
             Principal principal) throws JsonProcessingException, IllegalArgumentException {
-        
+        if (principal == null) {
+        	return "redirect:login";
+        }
+    	
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("projectName", projectName);
         requestParams.put("projectKey", projectKey);
@@ -72,7 +75,7 @@ public class BoardController {
     }
     
     public ModelMap getIssues(ModelMap mm, HttpSession session, Principal principal) {
-    	 Project p = (Project) session.getAttribute("project");
+    	Project p = (Project) session.getAttribute("project");
  	    Long projectId = p.getProjectId();
  	    
  	    // Fetch the JSON response as JsonNode

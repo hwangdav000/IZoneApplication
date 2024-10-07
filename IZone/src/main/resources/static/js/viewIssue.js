@@ -237,20 +237,7 @@ $(document).ready(function() {
 					// Format date as YYYY-MM-DD
 					var formattedDate = date.toISOString().split('T')[0];
                     commentsList.append('<li>' + comment.content + ' - <small>' + comment.submitter + ' on ' +  formattedDate + '</small></li>');
-                });
-                
-                // repopulate attachments
-                var attachmentsContainer = $('#attachmentsContainer');
-                attachmentsContainer.empty();
-                data.documents.forEach(function(doc) {
-                    var link = $('<a></a>') // Create a new <a> element with jQuery
-                        .attr('href', `/downloader?filePath=${encodeURIComponent(doc.documentPath)}`)
-                        .attr('download', doc.documentName)
-                        .addClass('btn btn-primary btn-sm m-2')
-                        .text(`${doc.documentName}`);
-                    attachmentsContainer.append(link); // Append the <a> element to the container
-                });
-				
+                });				
 
                 $('#issueModal').modal('show'); // Show the modal
             },

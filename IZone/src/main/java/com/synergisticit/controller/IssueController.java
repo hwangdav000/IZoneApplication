@@ -53,6 +53,11 @@ public class IssueController {
 	@GetMapping("backlog")
 	public String getBacklog(HttpSession session, Model model) {
 	    Project p = (Project) session.getAttribute("project");
+	    
+	    if (p == null) {
+	    	return "redirect:login";
+	    }
+	    
 	    Long projectId = p.getProjectId();
 	    
 	    // Fetch the JSON response as JsonNode
